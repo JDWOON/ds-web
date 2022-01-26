@@ -5,8 +5,8 @@ export default class InventoryScene extends Phaser.Scene {
 	}
 
 	preload () {
-		this.load.image('inventory', 'resource/src/템플릿/인벤 템플릿.png');
-		this.load.image('inventory-title', 'resource/src/템플릿/장비장착 템플릿.png');
+		this.load.image('inventory', 'resource/img/tpl/inven.png');
+		this.load.image('inventory-title', 'resource/img/tpl/inven-title.png');
 	}
 
 	create () {
