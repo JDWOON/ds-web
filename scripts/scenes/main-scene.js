@@ -6,10 +6,10 @@ export default class MainScene extends Phaser.Scene {
     }
 
 	preload () {
-		this.load.tilemapTiledJSON('map', 'resource/src/test-tile.json');
-		this.load.image('tiles1', 'resource/src/item/item.png');
+		this.load.tilemapTiledJSON('map', 'resource/map/test-tile.json');
+		this.load.image('tiles1', 'resource/img/item/item.png');
 
-		this.load.spritesheet('char', 'resource/src/char/100r.bmp',
+		this.load.spritesheet('char', 'resource/img/char/100r.bmp',
 	        { frameWidth: 32, frameHeight: 32 }
 	    );
 
