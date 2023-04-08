@@ -28,7 +28,8 @@ export default class MainScene extends Phaser.Scene {
 				key: 'char-' + item,
 				frames: this.anims.generateFrameNumbers('char', { frames: [(i*3),(i*3)+1,(i*3)+2,(i*3)+1] }),
 				frameRate: 3,
-				repeat: -1
+				repeat: -1,
+				transparent: true
 			});
 		});
 
@@ -48,31 +49,47 @@ export default class MainScene extends Phaser.Scene {
 		this.cameras.main.startFollow(this.player, true, 1, 1);
 
 	    //this.cameras.main.setZoom(4);
-
 		this.input.on('pointerdown', function(pointer, a, b) {
 			var clickX = layer.worldToTileX(this.cameras.main.scrollX + pointer.x),
 				clickY = layer.worldToTileY(this.cameras.main.scrollY + pointer.y);
-
+		
 			var moveX = layer.tileToWorldX(clickX) + 16 - this.player.x,
 				moveY = layer.tileToWorldY(clickY) + 16 - this.player.y;
-
-			if(Math.abs(moveX) > Math.abs(moveY)){
-				if(moveX < 0){
-					this.player.anims.play('char-left', true);
-				} else {
-					this.player.anims.play('char-right', true);
-				}
-			} else {
-				if(moveY < 0){
-					this.player.anims.play('char-up', true);
-				} else {
-					this.player.anims.play('char-down', true);
-				}
+		
+			var distance = Phaser.Math.Distance.Between(this.player.x, this.player.y, this.player.x + moveX, this.player.y + moveY);
+			var duration = distance * 5; // 이동 속도를 조절할 수 있는 값입니다.
+		
+			if(this.playerTween !== undefined) {
+				this.playerTween.stop();
 			}
-
-
-			this.player.x += moveX;
-			this.player.y += moveY;
+		
+			this.player.anims.stop();
+		
+			this.playerTween = this.tweens.add({
+				targets: this.player,
+				x: this.player.x + moveX,
+				y: this.player.y + moveY,
+				duration: duration,
+				onStart: function() {
+					if(Math.abs(moveX) > Math.abs(moveY)){
+						if(moveX < 0){
+							this.player.anims.play('char-left', true);
+						} else {
+							this.player.anims.play('char-right', true);
+						}
+					} else {
+						if(moveY < 0){
+							this.player.anims.play('char-up', true);
+						} else {
+							this.player.anims.play('char-down', true);
+						}
+					}
+				},
+				onComplete: function() {
+					this.player.anims.stop();
+				},
+				callbackScope: this
+			});
 		}, this);
 
 		this.input.keyboard.on('keydown-' + 'W', function (event) {
